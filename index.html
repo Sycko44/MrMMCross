@@ -1,89 +1,88 @@
-print("<!DOCTYPE html>")
-print("<html>")
-print("<head>")
-print("  <title>My Project Web Page</title>")
-print("  <style>")
-print("    #chat-container {")
-print("      width: 300px;")
-print("      border: 1px solid #ccc;")
-print("      padding: 10px;")
-print("      height: 200px;")
-print("      overflow-y: scroll;")
-print("      margin-bottom: 10px;")
-print("    }")
-print("    .user-message {")
-print("      text-align: right;")
-print("      color: blue;")
-print("    }")
-print("    .bot-message {")
-print("      text-align: left;")
-print("      color: green;")
-print("    }")
-print("  </style>")
-print("</head>")
-print("<body>")
-print("  <h1>Welcome to My Project</h1>")
-print("  ")
-print("  <h2>Simple Chatbot</h2>")
-print("  <div id='chat-container'>")
-print("    <!-- Chat messages will appear here -->")
-print("  </div>")
-print("  <input type='text' id='user-input' placeholder='Type your message...'>")
-print("  <button id='send-button'>Send</button>")
-print("  ")
-print("  <script>")
-print("    // Your JavaScript chatbot logic will go here")
-print("    const chatContainer = document.getElementById('chat-container');")
-print("    const userInput = document.getElementById('user-input');")
-print("    const sendButton = document.getElementById('send-button');")
-print("")
-print("    function appendMessage(sender, message) {")
-print("      const messageElement = document.createElement('p');")
-print("      messageElement.textContent = `${sender}: ${message}`;")
-print("      messageElement.classList.add(sender === 'User' ? 'user-message' : 'bot-message');")
-print("      chatContainer.appendChild(messageElement);")
-print("      // Scroll to the bottom")
-print("      chatContainer.scrollTop = chatContainer.scrollHeight;")
-print("    }")
-print("")
-print("    function getBotResponse(userMessage) {")
-print("      userMessage = userMessage.toLowerCase();")
-print("      if (userMessage.includes('hello') || userMessage.includes('hi')) {")
-print("        return 'Hello! How can I help you today?';")
-print("      } else if (userMessage.includes('how are you')) {")
-print("        return 'I am a bot, I do not have feelings.';")
-print("      } else if (userMessage.includes('bye') || userMessage.includes('goodbye')) {")
-print("        return 'Goodbye! Have a great day!';")
-print("      } else {")
-print("        return 'I am sorry, I do not understand that.';")
-print("      }")
-print("    }")
-print("")
-print("    function sendMessage() {")
-print("      const userMessage = userInput.value.trim();")
-print("      if (userMessage === '') return;")
-print("")
-print("      appendMessage('User', userMessage);")
-print("      userInput.value = ''; // Clear input field")
-print("")
-print("      // Get bot response after a short delay to simulate thinking")
-print("      setTimeout(() => {")
-print("        const botResponse = getBotResponse(userMessage);")
-print("        appendMessage('Bot', botResponse);")
-print("      }, 500);")
-print("    }")
-print("")
-print("    // Send message on button click")
-print("    sendButton.addEventListener('click', sendMessage);")
-print("")
-print("    // Send message on pressing Enter key in the input field")
-print("    userInput.addEventListener('keypress', function(event) {")
-print("      if (event.key === 'Enter') {")
-print("        sendMessage();")
-print("      }")
-print("    });")
-print("  </script>")
-print("</body>")
-print("</html>")
-print("```")
+%%writefile index.html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Project Web Page</title>
+  <style>
+    #chat-container {
+      width: 300px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      height: 200px;
+      overflow-y: scroll;
+      margin-bottom: 10px;
+    }
+    .user-message {
+      text-align: right;
+      color: blue;
+    }
+    .bot-message {
+      text-align: left;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to My Project</h1>
 
+  <h2>Simple Chatbot</h2>
+  <div id='chat-container'>
+    <!-- Chat messages will appear here -->
+  </div>
+  <input type='text' id='user-input' placeholder='Type your message...'>
+  <button id='send-button'>Send</button>
+
+  <script>
+    // Your JavaScript chatbot logic will go here
+    const chatContainer = document.getElementById('chat-container');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+
+    function appendMessage(sender, message) {
+      const messageElement = document.createElement('p');
+      messageElement.textContent = `${sender}: ${message}`;
+      messageElement.classList.add(sender === 'User' ? 'user-message' : 'bot-message');
+      chatContainer.appendChild(messageElement);
+      // Scroll to the bottom
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function getBotResponse(userMessage) {
+      userMessage = userMessage.toLowerCase();
+      if (userMessage.includes('hello') || userMessage.includes('hi')) {
+        return 'Hello! How can I help you today?';
+      } else if (userMessage.includes('how are you')) {
+        return 'I am a bot, I do not have feelings.';
+      } else if (userMessage.includes('bye') || userMessage.includes('goodbye')) {
+        return 'Goodbye! Have a great day!';
+      } else {
+        return 'I am sorry, I do not understand that.';
+      }
+    }
+
+    function sendMessage() {
+      const userMessage = userInput.value.trim();
+      if (userMessage === '') return;
+
+      appendMessage('User', userMessage);
+      userInput.value = ''; // Clear input field
+
+      // Get bot response after a short delay to simulate thinking
+      setTimeout(() => {
+        const botResponse = getBotResponse(userMessage);
+        appendMessage('Bot', botResponse);
+      }, 500);
+    }
+
+    // Send message on button click
+    sendButton.addEventListener('click', sendMessage);
+
+    // Send message on pressing Enter key in the input field
+    userInput.addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>
