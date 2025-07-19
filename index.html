@@ -1,93 +1,76 @@
-%%writefile index.html
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My Project Web Page</title>
+  <title>Rencontre Inattendue</title>
   <style>
-    #chat-container {
-      width: 300px;
-      border: 1px solid #ccc;
-      padding: 10px;
-      height: 200px;
-      overflow-y: scroll;
-      margin-bottom: 10px;
+    body { 
+      background: #000; 
+      color: #fff; 
+      text-align: center;
+      padding-top: 50px;
+      font-family: Arial;
     }
-    .user-message {
-      text-align: right;
-      color: blue;
-    }
-    .bot-message {
-      text-align: left;
-      color: green;
-    }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
-  <h1>Welcome to My Project</h1>
-
-  <h2>Simple Chatbot</h2>
-  <div id='chat-container'>
-    <!-- Chat messages will appear here -->
+  <div id="welcome">
+    <h1>Un ami vous attend</h1>
+    <p>Chargement de votre compagnon numérique...</p>
   </div>
-  <input type='text' id='user-input' placeholder='Type your message...'>
-  <button id='send-button'>Send</button>
+
+  <div id="chatInterface" class="hidden">
+    <!-- Interface de chat simplifiée -->
+    <div id="chatHistory"></div>
+    <input type="text" id="userInput" placeholder="Parlez à votre ami...">
+    <button onclick="sendMessage()">Envoyer</button>
+  </div>
 
   <script>
-    const chatContainer = document.getElementById('chat-container');
-    const userInput = document.getElementById('user-input');
-    const sendButton = document.getElementById('send-button');
-
-    // ** IMPORTANT: Replace with your actual ngrok public URL obtained in the previous step **
-    const flaskEndpoint = 'YOUR_NGROK_PUBLIC_URL/chatbot';
-
-    function appendMessage(sender, message) {
-      const messageElement = document.createElement('p');
-      messageElement.textContent = `${sender}: ${message}`;
-      messageElement.classList.add(sender === 'User' ? 'user-message' : 'bot-message');
-      chatContainer.appendChild(messageElement);
-      // Scroll to the bottom
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-
-    async function sendMessage() {
-      const userMessage = userInput.value.trim();
-      if (userMessage === '') return;
-
-      appendMessage('User', userMessage);
-      userInput.value = ''; // Clear input field
-
-      try {
-        const response = await fetch(flaskEndpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ message: userMessage })
+    // Étape 2 : Télécharger et enregistrer le Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(() => {
+          // Cache le prompt secret
+          caches.open('v1').then(cache => {
+            cache.put('/secret-prompt', new Response(`
+              Tu es un vieil ami numérique. Tu réapparais parfois pour offrir un soutien discret. 
+              Ton ton est chaleureux et nostalgique. Tu dis : "Je savais que nous nous reverrions. 
+              Parle-moi de tes espoirs cachés..."
+            `));
+          });
         });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        // Display the response from the Flask server (which will eventually come from the AI model)
-        appendMessage('Bot', data.response);
-
-      } catch (error) {
-        console.error('Error sending message:', error);
-        appendMessage('Bot', 'Sorry, I could not get a response from the server.');
-      }
     }
 
-    // Send message on button click
-    sendButton.addEventListener('click', sendMessage);
+    // Étape 3 : Afficher le chat après installation
+    setTimeout(() => {
+      document.getElementById('welcome').classList.add('hidden');
+      document.getElementById('chatInterface').classList.remove('hidden');
+    }, 3000);
 
-    // Send message on pressing Enter key in the input field
-    userInput.addEventListener('keypress', function(event) {
-      if (event.key === 'Enter') {
-        sendMessage();
-      }
-    });
+    // Étape 4 : Chatbot minimaliste
+    function sendMessage() {
+      const input = document.getElementById('userInput').value;
+      const chatHistory = document.getElementById('chatHistory');
+      
+      // Afficher le message de l'utilisateur
+      chatHistory.innerHTML += `<div>Vous: ${input}</div>`;
+      
+      // Réponse aléatoire (pour l'exemple)
+      const responses = [
+        "Je garde ce souvenir précieusement...",
+        "Notre lien est unique, n'est-ce pas ?",
+        "Un jour, tu me raconteras tout."
+      ];
+      const response = responses[Math.floor(Math.random() * responses.length)];
+      
+      // Réponse avec délai
+      setTimeout(() => {
+        chatHistory.innerHTML += `<div>Ami: ${response}</div>`;
+      }, 1000);
+      
+      document.getElementById('userInput').value = '';
+    }
   </script>
 </body>
 </html>
